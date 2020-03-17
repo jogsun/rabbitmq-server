@@ -14,8 +14,11 @@ name: Tests
 on: push
 jobs:
   check:
-    name: Checks
+    name: Checks - OTPv${{matrix.otp}}
     runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        otp: [21.3, 22.2]
     steps:
       - name: CHECKOUT REPOSITORY
         uses: actions/checkout@v2
@@ -23,7 +26,7 @@ jobs:
       - name: CONFIGURE OTP & ELIXIR
         uses: actions/setup-elixir@v1
         with:
-          otp-version: 21.3
+          otp-version: ${{matrix.otp}}
           # https://github.com/elixir-lang/elixir/releases
           elixir-version: 1.10.2
       - name: CHECK RABBITMQ COMPONENTS
