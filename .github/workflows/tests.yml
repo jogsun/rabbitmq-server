@@ -38,7 +38,7 @@ jobs:
   eunit:
     needs: check
     # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
-    name: eunit - OTP${{matrix.otp}}
+    name: eunit - OTPv${{matrix.otp}}
     runs-on: ubuntu-18.04
     strategy:
       matrix:
@@ -57,17 +57,10 @@ jobs:
         run: |
           branch_or_tag_name=${GITHUB_REF#refs/*/}
           make eunit base_rmq_ref=master current_rmq_ref=$branch_or_tag_name
-      - name: ON FAILURE CAPTURE TESTS LOGS AS ARTIFACT
-        # https://github.com/marketplace/actions/upload-artifact
-        uses: actions/upload-artifact@v1
-        # if: failure()
-        with:
-          name: eunit-logs.OTPv${{matrix.otp}}
-          path: logs
   ct-amqqueue_backward_compatibility:
     needs: check
     # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
-    name: ct-amqqueue_backward_compatibility - OTP${{matrix.otp}}
+    name: ct-amqqueue_backward_compatibility - OTPv${{matrix.otp}}
     runs-on: ubuntu-18.04
     strategy:
       matrix:
@@ -91,12 +84,12 @@ jobs:
         uses: actions/upload-artifact@v1
         # if: failure()
         with:
-          name: ct-amqqueue_backward_compatibility-logs.OTPv${{matrix.otp}}
+          name: ct-amqqueue_backward_compatibility-logs-OTPv${{matrix.otp}}
           path: logs
   ct-backing_queue:
     needs: check
     # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
-    name: ct-backing_queue - OTP${{matrix.otp}}
+    name: ct-backing_queue - OTPv${{matrix.otp}}
     runs-on: ubuntu-18.04
     strategy:
       matrix:
@@ -118,14 +111,14 @@ jobs:
       - name: ON FAILURE CAPTURE TESTS LOGS AS ARTIFACT
         # https://github.com/marketplace/actions/upload-artifact
         uses: actions/upload-artifact@v1
-        if: failure()
+        # if: failure()
         with:
-          name: ct-backing_queue-logs.OTPv${{matrix.otp}}
+          name: ct-backing_queue-logs-OTPv${{matrix.otp}}
           path: logs
   ct-channel_interceptor:
     needs: check
     # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
-    name: OTP ${{matrix.otp}} ct-channel_interceptor
+    name: ct-channel_interceptor - OTPv${{matrix.otp}}
     runs-on: ubuntu-18.04
     strategy:
       matrix:
@@ -149,12 +142,12 @@ jobs:
         uses: actions/upload-artifact@v1
         # if: failure()
         with:
-          name: tests-logs-OTPv${{matrix.otp}}
+          name: ct-channel_interceptor-logs-OTPv${{matrix.otp}}
           path: logs
   ct-channel_operation_timeout:
     needs: check
     # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
-    name: OTP ${{matrix.otp}} ct-channel_operation_timeout
+    name: ct-channel_operation_timeout - OTPv${{matrix.otp}}
     runs-on: ubuntu-18.04
     strategy:
       matrix:
@@ -178,12 +171,12 @@ jobs:
         uses: actions/upload-artifact@v1
         # if: failure()
         with:
-          name: tests-logs-OTPv${{matrix.otp}}
+          name: ct-channel_operation_timeout-logs-OTPv${{matrix.otp}}
           path: logs
   ct-cluster:
     needs: check
     # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
-    name: OTP ${{matrix.otp}} ct-cluster
+    name: ct-cluster - OTPv${{matrix.otp}}
     runs-on: ubuntu-18.04
     strategy:
       matrix:
@@ -205,14 +198,14 @@ jobs:
       - name: ON FAILURE CAPTURE TESTS LOGS AS ARTIFACT
         # https://github.com/marketplace/actions/upload-artifact
         uses: actions/upload-artifact@v1
-        if: failure()
+        # if: failure()
         with:
-          name: tests-logs-OTPv${{matrix.otp}}
+          name: ct-cluster-logs-OTPv${{matrix.otp}}
           path: logs
   ct-cluster_formation_locking:
     needs: check
     # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
-    name: OTP ${{matrix.otp}} ct-cluster_formation_locking
+    name: ct-cluster_formation_locking - OTPv${{matrix.otp}}
     runs-on: ubuntu-18.04
     strategy:
       matrix:
@@ -234,14 +227,14 @@ jobs:
       - name: ON FAILURE CAPTURE TESTS LOGS AS ARTIFACT
         # https://github.com/marketplace/actions/upload-artifact
         uses: actions/upload-artifact@v1
-        if: failure()
+        # if: failure()
         with:
-          name: tests-logs-OTPv${{matrix.otp}}
+          name: ct-cluster_formation_locking-logs-OTPv${{matrix.otp}}
           path: logs
   ct-authn_authz_context_propagation:
     needs: check
     # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
-    name: OTP ${{matrix.otp}} ct-authn_authz_context_propagation
+    name: ct-authn_authz_context_propagation - OTPv${{matrix.otp}}
     runs-on: ubuntu-18.04
     strategy:
       matrix:
@@ -263,14 +256,14 @@ jobs:
       - name: ON FAILURE CAPTURE TESTS LOGS AS ARTIFACT
         # https://github.com/marketplace/actions/upload-artifact
         uses: actions/upload-artifact@v1
-        if: failure()
+        # if: failure()
         with:
-          name: tests-logs-OTPv${{matrix.otp}}
+          name: ct-authn_authz_context_propagation-logs-OTPv${{matrix.otp}}
           path: logs
   ct-cluster_rename:
     needs: check
     # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
-    name: OTP ${{matrix.otp}} ct-cluster_rename
+    name: ct-cluster_rename - OTPv${{matrix.otp}}
     runs-on: ubuntu-18.04
     strategy:
       matrix:
@@ -292,14 +285,14 @@ jobs:
       - name: ON FAILURE CAPTURE TESTS LOGS AS ARTIFACT
         # https://github.com/marketplace/actions/upload-artifact
         uses: actions/upload-artifact@v1
-        if: failure()
+        # if: failure()
         with:
-          name: tests-logs-OTPv${{matrix.otp}}
+          name: ct-cluster_rename-logs-OTPv${{matrix.otp}}
           path: logs
   ct-credential_validation:
     needs: check
     # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
-    name: OTP ${{matrix.otp}} ct-credential_validation
+    name: ct-credential_validation - OTPv${{matrix.otp}}
     runs-on: ubuntu-18.04
     strategy:
       matrix:
@@ -321,14 +314,14 @@ jobs:
       - name: ON FAILURE CAPTURE TESTS LOGS AS ARTIFACT
         # https://github.com/marketplace/actions/upload-artifact
         uses: actions/upload-artifact@v1
-        if: failure()
+        # if: failure()
         with:
-          name: tests-logs-OTPv${{matrix.otp}}
+          name: ct-credential_validation-logs-OTPv${{matrix.otp}}
           path: logs
   ct-confirms_rejects:
     needs: check
     # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
-    name: OTP ${{matrix.otp}} ct-confirms_rejects
+    name: ct-confirms_rejects - OTPv${{matrix.otp}}
     runs-on: ubuntu-18.04
     strategy:
       matrix:
@@ -350,14 +343,14 @@ jobs:
       - name: ON FAILURE CAPTURE TESTS LOGS AS ARTIFACT
         # https://github.com/marketplace/actions/upload-artifact
         uses: actions/upload-artifact@v1
-        if: failure()
+        # if: failure()
         with:
-          name: tests-logs-OTPv${{matrix.otp}}
+          name: ct-confirms_rejects-logs-OTPv${{matrix.otp}}
           path: logs
   ct-consumer_timeout:
     needs: check
     # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
-    name: OTP ${{matrix.otp}} ct-consumer_timeout
+    name: ct-consumer_timeout - OTPv${{matrix.otp}}
     runs-on: ubuntu-18.04
     strategy:
       matrix:
@@ -379,14 +372,14 @@ jobs:
       - name: ON FAILURE CAPTURE TESTS LOGS AS ARTIFACT
         # https://github.com/marketplace/actions/upload-artifact
         uses: actions/upload-artifact@v1
-        if: failure()
+        # if: failure()
         with:
-          name: tests-logs-OTPv${{matrix.otp}}
+          name: ct-consumer_timeout-logs-OTPv${{matrix.otp}}
           path: logs
   ct-crashing_queues:
     needs: check
     # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
-    name: OTP ${{matrix.otp}} ct-crashing_queues
+    name: ct-crashing_queues - OTPv${{matrix.otp}}
     runs-on: ubuntu-18.04
     strategy:
       matrix:
@@ -408,14 +401,14 @@ jobs:
       - name: ON FAILURE CAPTURE TESTS LOGS AS ARTIFACT
         # https://github.com/marketplace/actions/upload-artifact
         uses: actions/upload-artifact@v1
-        if: failure()
+        # if: failure()
         with:
-          name: tests-logs-OTPv${{matrix.otp}}
+          name: ct-crashing_queues-logs-OTPv${{matrix.otp}}
           path: logs
   ct-dead_lettering:
     needs: check
     # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
-    name: OTP ${{matrix.otp}} ct-dead_lettering
+    name: ct-dead_lettering - OTPv${{matrix.otp}}
     runs-on: ubuntu-18.04
     strategy:
       matrix:
@@ -437,14 +430,14 @@ jobs:
       - name: ON FAILURE CAPTURE TESTS LOGS AS ARTIFACT
         # https://github.com/marketplace/actions/upload-artifact
         uses: actions/upload-artifact@v1
-        if: failure()
+        # if: failure()
         with:
-          name: tests-logs-OTPv${{matrix.otp}}
+          name: ct-dead_lettering-logs-OTPv${{matrix.otp}}
           path: logs
-  ct-clustering_management:
+  ct-clustering_management_unclustered:
     needs: check
     # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
-    name: OTP ${{matrix.otp}} ct-clustering_management
+    name: ct-clustering_management_unclustered - OTPv${{matrix.otp}}
     runs-on: ubuntu-18.04
     strategy:
       matrix:
@@ -462,18 +455,47 @@ jobs:
       - name: RUN TESTS
         run: |
           branch_or_tag_name=${GITHUB_REF#refs/*/}
-          make ct-clustering_management base_rmq_ref=master current_rmq_ref=$branch_or_tag_name
+          make ct-clustering_management t=unclustered base_rmq_ref=master current_rmq_ref=$branch_or_tag_name
       - name: ON FAILURE CAPTURE TESTS LOGS AS ARTIFACT
         # https://github.com/marketplace/actions/upload-artifact
         uses: actions/upload-artifact@v1
-        if: failure()
+        # if: failure()
         with:
-          name: tests-logs-OTPv${{matrix.otp}}
+          name: ct-clustering_management_unclustered-logs-OTPv${{matrix.otp}}
+          path: logs
+  ct-clustering_management_clustered:
+    needs: check
+    # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
+    name: ct-clustering_management_clustered - OTPv${{matrix.otp}}
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        otp: [21.3, 22.2]
+    steps:
+      - name: CHECKOUT REPOSITORY
+        uses: actions/checkout@v2
+      # https://github.com/marketplace/actions/setup-elixir
+      - name: CONFIGURE OTP & ELIXIR
+        uses: actions/setup-elixir@v1
+        with:
+          otp-version: ${{matrix.otp}}
+          # https://github.com/elixir-lang/elixir/releases
+          elixir-version: 1.10.2
+      - name: RUN TESTS
+        run: |
+          branch_or_tag_name=${GITHUB_REF#refs/*/}
+          make ct-clustering_management t=clustered base_rmq_ref=master current_rmq_ref=$branch_or_tag_name
+      - name: ON FAILURE CAPTURE TESTS LOGS AS ARTIFACT
+        # https://github.com/marketplace/actions/upload-artifact
+        uses: actions/upload-artifact@v1
+        # if: failure()
+        with:
+          name: ct-clustering_management_clustered-logs-OTPv${{matrix.otp}}
           path: logs
   ct-config_schema:
     needs: check
     # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
-    name: OTP ${{matrix.otp}} ct-config_schema
+    name: ct-config_schema - OTPv${{matrix.otp}}
     runs-on: ubuntu-18.04
     strategy:
       matrix:
@@ -495,7 +517,7 @@ jobs:
       - name: ON FAILURE CAPTURE TESTS LOGS AS ARTIFACT
         # https://github.com/marketplace/actions/upload-artifact
         uses: actions/upload-artifact@v1
-        if: failure()
+        # if: failure()
         with:
-          name: tests-logs-OTPv${{matrix.otp}}
+          name: ct-config_schema-logs-OTPv${{matrix.otp}}
           path: logs
