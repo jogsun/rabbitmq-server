@@ -1,8 +1,13 @@
-min_supported_otp_version: &min_supported_otp_version 21.3
-max_supported_otp_version: &max_supported_otp_version 22.2
-min_and_max_supported_otp_versions: &min_and_max_supported_otp_versions [21.3, 22.2]
-elixir_version: &elixir_version 1.10.2
-vm_image: &vm_image ubuntu-18.04
+# This is what we would like to do if YAML anchors were supported:
+#
+# min_supported_otp_version: &min_supported_otp_version 21.3
+# max_supported_otp_version: &max_supported_otp_version 22.2
+# min_and_max_supported_otp_versions: &min_and_max_supported_otp_versions [21.3, 22.2]
+# elixir_version: &elixir_version 1.10.2
+# vm_image: &vm_image ubuntu-18.04
+#
+# Since they are not, we will need to use search & replace when these change.
+# The assumption that we should be using some sort of templating (e.g. ytt) is still being challenged.
 
 # https://help.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow
 name: Tests
@@ -10,7 +15,7 @@ on: push
 jobs:
   check:
     name: Checks
-    runs-on: *vm_image
+    runs-on: ubuntu-18.04
     steps:
       - name: CHECKOUT REPOSITORY
         uses: actions/checkout@v2
@@ -18,9 +23,9 @@ jobs:
       - name: CONFIGURE OTP & ELIXIR
         uses: actions/setup-elixir@v1
         with:
-          otp-version: *min_supported_otp_version
+          otp-version: 21.3
           # https://github.com/elixir-lang/elixir/releases
-          elixir-version: *elixir_version
+          elixir-version: 1.10.2
       - name: CHECK RABBITMQ COMPONENTS
         run: |
           branch_or_tag_name=${GITHUB_REF#refs/*/}
@@ -34,10 +39,10 @@ jobs:
     needs: check
     # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
     name: eunit - OTP${{matrix.otp}}
-    runs-on: *vm_image
+    runs-on: ubuntu-18.04
     strategy:
       matrix:
-        otp: *min_and_max_supported_otp_versions
+        otp: [21.3, 22.2]
     steps:
       - name: CHECKOUT REPOSITORY
         uses: actions/checkout@v2
@@ -47,7 +52,7 @@ jobs:
         with:
           otp-version: ${{matrix.otp}}
           # https://github.com/elixir-lang/elixir/releases
-          elixir-version: *elixir_version
+          elixir-version: 1.10.2
       - name: RUN TESTS
         run: |
           branch_or_tag_name=${GITHUB_REF#refs/*/}
@@ -63,10 +68,10 @@ jobs:
     needs: check
     # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
     name: ct-amqqueue_backward_compatibility - OTP${{matrix.otp}}
-    runs-on: *vm_image
+    runs-on: ubuntu-18.04
     strategy:
       matrix:
-        otp: *min_and_max_supported_otp_versions
+        otp: [21.3, 22.2]
     steps:
       - name: CHECKOUT REPOSITORY
         uses: actions/checkout@v2
@@ -76,7 +81,7 @@ jobs:
         with:
           otp-version: ${{matrix.otp}}
           # https://github.com/elixir-lang/elixir/releases
-          elixir-version: *elixir_version
+          elixir-version: 1.10.2
       - name: RUN TESTS
         run: |
           branch_or_tag_name=${GITHUB_REF#refs/*/}
@@ -92,10 +97,10 @@ jobs:
     needs: check
     # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
     name: ct-backing_queue - OTP${{matrix.otp}}
-    runs-on: *vm_image
+    runs-on: ubuntu-18.04
     strategy:
       matrix:
-        otp: *min_and_max_supported_otp_versions
+        otp: [21.3, 22.2]
     steps:
       - name: CHECKOUT REPOSITORY
         uses: actions/checkout@v2
@@ -105,7 +110,7 @@ jobs:
         with:
           otp-version: ${{matrix.otp}}
           # https://github.com/elixir-lang/elixir/releases
-          elixir-version: *elixir_version
+          elixir-version: 1.10.2
       - name: RUN TESTS
         run: |
           branch_or_tag_name=${GITHUB_REF#refs/*/}
