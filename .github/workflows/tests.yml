@@ -434,10 +434,10 @@ jobs:
         with:
           name: ct-dead_lettering-logs-OTPv${{matrix.otp}}
           path: logs
-  ct-clustering_management_unclustered:
+  ct-clustering_management_unclustered_2_nodes:
     needs: check
     # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
-    name: ct-clustering_management_unclustered - OTPv${{matrix.otp}}
+    name: ct-clustering_management_unclustered_2_nodes - OTPv${{matrix.otp}}
     runs-on: ubuntu-18.04
     strategy:
       matrix:
@@ -455,18 +455,18 @@ jobs:
       - name: RUN TESTS
         run: |
           branch_or_tag_name=${GITHUB_REF#refs/*/}
-          make ct-clustering_management t=unclustered base_rmq_ref=master current_rmq_ref=$branch_or_tag_name
+          make ct-clustering_management t=unclustered_2_nodes base_rmq_ref=master current_rmq_ref=$branch_or_tag_name
       - name: ON FAILURE CAPTURE TESTS LOGS AS ARTIFACT
         # https://github.com/marketplace/actions/upload-artifact
         uses: actions/upload-artifact@v1
         # if: failure()
         with:
-          name: ct-clustering_management_unclustered-logs-OTPv${{matrix.otp}}
+          name: ct-clustering_management_unclustered_2_nodes-logs-OTPv${{matrix.otp}}
           path: logs
-  ct-clustering_management_clustered:
+  ct-clustering_management_unclustered_3_nodes:
     needs: check
     # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
-    name: ct-clustering_management_clustered - OTPv${{matrix.otp}}
+    name: ct-clustering_management_unclustered_3_nodes - OTPv${{matrix.otp}}
     runs-on: ubuntu-18.04
     strategy:
       matrix:
@@ -484,13 +484,71 @@ jobs:
       - name: RUN TESTS
         run: |
           branch_or_tag_name=${GITHUB_REF#refs/*/}
-          make ct-clustering_management t=clustered base_rmq_ref=master current_rmq_ref=$branch_or_tag_name
+          make ct-clustering_management t=unclustered_3_nodes base_rmq_ref=master current_rmq_ref=$branch_or_tag_name
       - name: ON FAILURE CAPTURE TESTS LOGS AS ARTIFACT
         # https://github.com/marketplace/actions/upload-artifact
         uses: actions/upload-artifact@v1
         # if: failure()
         with:
-          name: ct-clustering_management_clustered-logs-OTPv${{matrix.otp}}
+          name: ct-clustering_management_unclustered_3_nodes-logs-OTPv${{matrix.otp}}
+          path: logs
+  ct-clustering_management_clustered_2_nodes:
+    needs: check
+    # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
+    name: ct-clustering_management_clustered_2_nodes - OTPv${{matrix.otp}}
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        otp: [21.3, 22.2]
+    steps:
+      - name: CHECKOUT REPOSITORY
+        uses: actions/checkout@v2
+      # https://github.com/marketplace/actions/setup-elixir
+      - name: CONFIGURE OTP & ELIXIR
+        uses: actions/setup-elixir@v1
+        with:
+          otp-version: ${{matrix.otp}}
+          # https://github.com/elixir-lang/elixir/releases
+          elixir-version: 1.10.2
+      - name: RUN TESTS
+        run: |
+          branch_or_tag_name=${GITHUB_REF#refs/*/}
+          make ct-clustering_management t=clustered_2_nodes base_rmq_ref=master current_rmq_ref=$branch_or_tag_name
+      - name: ON FAILURE CAPTURE TESTS LOGS AS ARTIFACT
+        # https://github.com/marketplace/actions/upload-artifact
+        uses: actions/upload-artifact@v1
+        # if: failure()
+        with:
+          name: ct-clustering_management_clustered_2_nodes-logs-OTPv${{matrix.otp}}
+          path: logs
+  ct-clustering_management_clustered_4_nodes:
+    needs: check
+    # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
+    name: ct-clustering_management_clustered_4_nodes - OTPv${{matrix.otp}}
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        otp: [21.3, 22.2]
+    steps:
+      - name: CHECKOUT REPOSITORY
+        uses: actions/checkout@v2
+      # https://github.com/marketplace/actions/setup-elixir
+      - name: CONFIGURE OTP & ELIXIR
+        uses: actions/setup-elixir@v1
+        with:
+          otp-version: ${{matrix.otp}}
+          # https://github.com/elixir-lang/elixir/releases
+          elixir-version: 1.10.2
+      - name: RUN TESTS
+        run: |
+          branch_or_tag_name=${GITHUB_REF#refs/*/}
+          make ct-clustering_management t=clustered_4_nodes base_rmq_ref=master current_rmq_ref=$branch_or_tag_name
+      - name: ON FAILURE CAPTURE TESTS LOGS AS ARTIFACT
+        # https://github.com/marketplace/actions/upload-artifact
+        uses: actions/upload-artifact@v1
+        # if: failure()
+        with:
+          name: ct-clustering_management_clustered_4_nodes-logs-OTPv${{matrix.otp}}
           path: logs
   ct-config_schema:
     needs: check
