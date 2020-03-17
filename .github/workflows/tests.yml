@@ -1,11 +1,16 @@
-# TODO: use ct suite name for logs artefacts
+min_supported_otp_version: &min_supported_otp_version 21.3
+max_supported_otp_version: &max_supported_otp_version 22.2
+min_and_max_supported_otp_versions: &min_and_max_supported_otp_versions [21.3, 22.2]
+elixir_version: &elixir_version 1.10.2
+vm_image: &vm_image ubuntu-18.04
+
 # https://help.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow
 name: Tests
 on: push
 jobs:
   check:
     name: Checks
-    runs-on: ubuntu-18.04
+    runs-on: *vm_image
     steps:
       - name: CHECKOUT REPOSITORY
         uses: actions/checkout@v2
@@ -13,9 +18,9 @@ jobs:
       - name: CONFIGURE OTP & ELIXIR
         uses: actions/setup-elixir@v1
         with:
-          otp-version: 21.3
+          otp-version: *min_supported_otp_version
           # https://github.com/elixir-lang/elixir/releases
-          elixir-version: 1.10.2
+          elixir-version: *elixir_version
       - name: CHECK RABBITMQ COMPONENTS
         run: |
           branch_or_tag_name=${GITHUB_REF#refs/*/}
@@ -28,11 +33,11 @@ jobs:
   eunit:
     needs: check
     # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
-    name: OTP ${{matrix.otp}} eunit
-    runs-on: ubuntu-18.04
+    name: eunit - OTP${{matrix.otp}}
+    runs-on: *vm_image
     strategy:
       matrix:
-        otp: [21.3, 22.2]
+        otp: *min_and_max_supported_otp_versions
     steps:
       - name: CHECKOUT REPOSITORY
         uses: actions/checkout@v2
@@ -42,7 +47,7 @@ jobs:
         with:
           otp-version: ${{matrix.otp}}
           # https://github.com/elixir-lang/elixir/releases
-          elixir-version: 1.10.2
+          elixir-version: *elixir_version
       - name: RUN TESTS
         run: |
           branch_or_tag_name=${GITHUB_REF#refs/*/}
@@ -50,18 +55,18 @@ jobs:
       - name: ON FAILURE CAPTURE TESTS LOGS AS ARTIFACT
         # https://github.com/marketplace/actions/upload-artifact
         uses: actions/upload-artifact@v1
-        if: failure()
+        # if: failure()
         with:
-          name: tests-logs-OTPv${{matrix.otp}}
+          name: eunit-logs.OTPv${{matrix.otp}}
           path: logs
   ct-amqqueue_backward_compatibility:
     needs: check
     # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
-    name: OTP ${{matrix.otp}} ct-amqqueue_backward_compatibility
-    runs-on: ubuntu-18.04
+    name: ct-amqqueue_backward_compatibility - OTP${{matrix.otp}}
+    runs-on: *vm_image
     strategy:
       matrix:
-        otp: [21.3, 22.2]
+        otp: *min_and_max_supported_otp_versions
     steps:
       - name: CHECKOUT REPOSITORY
         uses: actions/checkout@v2
@@ -71,7 +76,7 @@ jobs:
         with:
           otp-version: ${{matrix.otp}}
           # https://github.com/elixir-lang/elixir/releases
-          elixir-version: 1.10.2
+          elixir-version: *elixir_version
       - name: RUN TESTS
         run: |
           branch_or_tag_name=${GITHUB_REF#refs/*/}
@@ -79,18 +84,18 @@ jobs:
       - name: ON FAILURE CAPTURE TESTS LOGS AS ARTIFACT
         # https://github.com/marketplace/actions/upload-artifact
         uses: actions/upload-artifact@v1
-        if: failure()
+        # if: failure()
         with:
-          name: tests-logs-OTPv${{matrix.otp}}
+          name: ct-amqqueue_backward_compatibility-logs.OTPv${{matrix.otp}}
           path: logs
   ct-backing_queue:
     needs: check
     # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
-    name: OTP ${{matrix.otp}} ct-backing_queue
-    runs-on: ubuntu-18.04
+    name: ct-backing_queue - OTP${{matrix.otp}}
+    runs-on: *vm_image
     strategy:
       matrix:
-        otp: [21.3, 22.2]
+        otp: *min_and_max_supported_otp_versions
     steps:
       - name: CHECKOUT REPOSITORY
         uses: actions/checkout@v2
@@ -100,7 +105,7 @@ jobs:
         with:
           otp-version: ${{matrix.otp}}
           # https://github.com/elixir-lang/elixir/releases
-          elixir-version: 1.10.2
+          elixir-version: *elixir_version
       - name: RUN TESTS
         run: |
           branch_or_tag_name=${GITHUB_REF#refs/*/}
@@ -110,7 +115,7 @@ jobs:
         uses: actions/upload-artifact@v1
         if: failure()
         with:
-          name: tests-logs-OTPv${{matrix.otp}}
+          name: ct-backing_queue-logs.OTPv${{matrix.otp}}
           path: logs
   ct-channel_interceptor:
     needs: check
@@ -137,7 +142,7 @@ jobs:
       - name: ON FAILURE CAPTURE TESTS LOGS AS ARTIFACT
         # https://github.com/marketplace/actions/upload-artifact
         uses: actions/upload-artifact@v1
-        if: failure()
+        # if: failure()
         with:
           name: tests-logs-OTPv${{matrix.otp}}
           path: logs
@@ -166,7 +171,7 @@ jobs:
       - name: ON FAILURE CAPTURE TESTS LOGS AS ARTIFACT
         # https://github.com/marketplace/actions/upload-artifact
         uses: actions/upload-artifact@v1
-        if: failure()
+        # if: failure()
         with:
           name: tests-logs-OTPv${{matrix.otp}}
           path: logs
@@ -315,10 +320,10 @@ jobs:
         with:
           name: tests-logs-OTPv${{matrix.otp}}
           path: logs
-  ct-confirm_rejects:
+  ct-confirms_rejects:
     needs: check
     # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
-    name: OTP ${{matrix.otp}} ct-confirm_rejects
+    name: OTP ${{matrix.otp}} ct-confirms_rejects
     runs-on: ubuntu-18.04
     strategy:
       matrix:
@@ -336,7 +341,7 @@ jobs:
       - name: RUN TESTS
         run: |
           branch_or_tag_name=${GITHUB_REF#refs/*/}
-          make ct-confirm_rejects base_rmq_ref=master current_rmq_ref=$branch_or_tag_name
+          make ct-confirms_rejects base_rmq_ref=master current_rmq_ref=$branch_or_tag_name
       - name: ON FAILURE CAPTURE TESTS LOGS AS ARTIFACT
         # https://github.com/marketplace/actions/upload-artifact
         uses: actions/upload-artifact@v1
