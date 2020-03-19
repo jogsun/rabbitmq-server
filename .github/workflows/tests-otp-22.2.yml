@@ -684,12 +684,12 @@ jobs:
       - name: RUN TESTS
         run: |
           branch_or_tag_name=${GITHUB_REF#refs/*/}
-          if ! make ct-feature_flags base_rmq_ref=master current_rmq_ref=$branch_or_tag_name
-          then
-            make ct-logs-archive
-            exit 1
-          fi
-      - name: ON FAILURE CAPTURE TESTS LOGS AS ARTIFACT
+          make ct-feature_flags base_rmq_ref=master current_rmq_ref=$branch_or_tag_name
+      - name: ON FAILURE ARCHIVE TESTS LOGS
+        if: failure()
+        run: |
+          make ct-logs-archive
+      - name: ON FAILURE UPLOAD TESTS LOGS AS ARTIFACT
         # https://github.com/marketplace/actions/upload-artifact
         uses: actions/upload-artifact@v2-preview
         if: failure()
