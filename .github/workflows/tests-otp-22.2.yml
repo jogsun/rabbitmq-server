@@ -689,7 +689,7 @@ jobs:
         # if: failure()
         run: |
           make ct-logs-archive
-      - name: ON FAILURE UPLOAD TESTS LOGS AS ARTIFACT
+      - name: ON FAILURE UPLOAD TESTS LOGS ARTIFACT
         # https://github.com/marketplace/actions/upload-artifact
         uses: actions/upload-artifact@v2-preview
         # if: failure()
